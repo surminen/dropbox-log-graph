@@ -1,6 +1,8 @@
 package com.example.demo;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,6 +38,8 @@ public class GreetingController {
 
 	DbxWebAuth webAuth;
 
+	String accessToken;
+
 	String redirectUri = "https://192.168.99.100:8080/demo2";
 
 	@RequestMapping("/graph")
@@ -63,37 +67,40 @@ public class GreetingController {
 
 		DbxAuthFinish authFinish;
 
-		try {
-			authFinish = webAuth.finishFromRedirect(redirectUri, csrfTokenStore, request.getParameterMap());
+		if (accessToken == null) {
 
-		} catch (
+			try {
+				authFinish = webAuth.finishFromRedirect(redirectUri, csrfTokenStore, request.getParameterMap());
 
-		DbxWebAuth.BadRequestException ex) {
-			// log("On /dropbox-auth-finish: Bad request: " + ex.getMessage());
-			response.sendError(400);
-			return ex.getMessage();
-		} catch (DbxWebAuth.BadStateException ex) {
-			// Send them back to the start of the auth flow.
-			response.sendRedirect("http://my-server.com/dropbox-auth-start");
-			return ex.getMessage();
-		} catch (DbxWebAuth.CsrfException ex) {
-			// log("On /dropbox-auth-finish: CSRF mismatch: " + ex.getMessage());
-			response.sendError(403, "Forbidden.");
-			return ex.getMessage();
-		} catch (DbxWebAuth.NotApprovedException ex) {
-			// log("User rejected: " + ex.getMessage());
-			return ex.getMessage();
-		} catch (DbxWebAuth.ProviderException ex) {
-			// log("On /dropbox-auth-finish: Auth failed: " + ex.getMessage());
-			response.sendError(503, "Error communicating with Dropbox.");
-			return ex.getMessage();
-		} catch (DbxException ex) {
-			// log("On /dropbox-auth-finish: Error getting token: " + ex.getMessage());
-			response.sendError(503, "Error communicating with Dropbox.");
-			return ex.getMessage();
+			} catch (
+
+			DbxWebAuth.BadRequestException ex) {
+				// log("On /dropbox-auth-finish: Bad request: " + ex.getMessage());
+				response.sendError(400);
+				return ex.getMessage();
+			} catch (DbxWebAuth.BadStateException ex) {
+				// Send them back to the start of the auth flow.
+				response.sendRedirect("http://my-server.com/dropbox-auth-start");
+				return ex.getMessage();
+			} catch (DbxWebAuth.CsrfException ex) {
+				// log("On /dropbox-auth-finish: CSRF mismatch: " + ex.getMessage());
+				response.sendError(403, "Forbidden.");
+				return ex.getMessage();
+			} catch (DbxWebAuth.NotApprovedException ex) {
+				// log("User rejected: " + ex.getMessage());
+				return ex.getMessage();
+			} catch (DbxWebAuth.ProviderException ex) {
+				// log("On /dropbox-auth-finish: Auth failed: " + ex.getMessage());
+				response.sendError(503, "Error communicating with Dropbox.");
+				return ex.getMessage();
+			} catch (DbxException ex) {
+				// log("On /dropbox-auth-finish: Error getting token: " + ex.getMessage());
+				response.sendError(503, "Error communicating with Dropbox.");
+				return ex.getMessage();
+			}
+
+			accessToken = authFinish.getAccessToken();
 		}
-
-		String accessToken = authFinish.getAccessToken();
 
 		// Get all files in the specified folder
 		DbxClientV2 client = new DbxClientV2(config, accessToken);
@@ -101,6 +108,31 @@ public class GreetingController {
 
 		// Add the file data to the model
 		model.addAttribute("data", listing.getEntries());
+
+		List<String> dates = new ArrayList<>();
+		List<String> titles = new ArrayList<>();
+		for (Metadata item : listing.getEntries()) {
+			if (item.getName().endsWith(".gpx")) {
+				// String date = item.getName().split("\\xA7")[0];
+				String title = item.getName().split("\\xA7")[2];
+
+				String date = item.getName().substring(0, 8);
+				String date2 = date.substring(0, 4) + "-";
+				date2 += date.substring(4, 6) + "-";
+				date2 += date.substring(6, 8);
+
+				dates.add(date2);
+				titles.add(title);
+				
+				// Also get file contents here
+			}
+			else
+			{
+				// Get coodinates out of the gpx file
+			}
+		}
+		model.addAttribute("dates", dates);
+		model.addAttribute("titles", titles);
 
 		// return the template to display;
 		return "graphView";

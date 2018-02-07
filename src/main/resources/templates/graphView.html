@@ -10,6 +10,15 @@
 </style>
 </head>
 
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css"
+	rel="stylesheet" type="text/css" />
+
 <!-- <body ng-app="hello"> -->
 <body>
 	<p th:text="'Hello, ' + ${name} + '!'" />
@@ -20,14 +29,37 @@
 		</tr>
 	</table>
 
-	<!--   <div class="container"> -->
-	<!--     <h1>Greetings</h1> -->
-	<!--     <div ng-controller="home" ng-cloak class="ng-cloak"> -->
-	<!--       <p>The ID is {{greeting.id}}</p> -->
-	<!--       <p>The content is {{greeting.content}}</p> -->
-	<!--     </div> -->
-	<!--   </div> -->
-	<!--   <script src="js/angular-bootstrap.js" type="text/javascript"></script> -->
-	<!--   <script src="../static/js/hello.js"></script> -->
+	<div id="visualization"></div>
+
+	<script th:inline="javascript">
+/*<![CDATA[*/
+
+  	// DOM element where the Timeline will be attached
+  	var container = document.getElementById('visualization');
+
+//   	// Create a DataSet (allows two way data-binding)
+   	var items = new vis.DataSet();
+//   	var items = new vis.DataSet([
+//     	{id: 1, content: 'item 1', start: '2013-04-20'},
+//     	{id: 4, content: 'item 4', start: '2013-04-16', end: '2013-04-19'},
+//   	]);
+
+	var cnt = 1;
+ 	var dateList = [[${dates}]]
+	var titleList = [[${titles}]]
+    for (i = 0; i < dateList.length; i++) {
+   		items.add({id: cnt++, content: titleList[i], start: dateList[i]});
+    }
+   	/*[/]*/
+  
+  	// Configuration for the Timeline
+  	var options = {};
+
+  	// Create a Timeline
+  	var timeline = new vis.Timeline(container, items, options);
+  
+/*]]>*/
+</script>
+
 </body>
 </html>
