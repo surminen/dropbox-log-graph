@@ -8,10 +8,28 @@
 	display: none !important;
 }
 </style>
+
+<link rel="stylesheet" href="https://192.168.99.100:8080/css/style.css" />
+<link rel="stylesheet"
+	href="https://192.168.99.100:8080/normalize.css/normalize.css" />
+<link rel="stylesheet" href="https://192.168.99.100:8080/css/reset.css" />
+
 </head>
 
 <script
 	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+
+<script src="https://192.168.99.100:8080/js/angular-timeline.js"></script>
+<script src="https://192.168.99.100:8080/css/angular-timeline.css"></script>
+<script
+	src="https://192.168.99.100:8080/css/angular-timeline-bootstrap.css"></script>
+
+
+
+
+<script src="https://192.168.99.100:8080/jquery/dist/jquery.js"></script>
+<script src="https://192.168.99.100:8080/js/main.js"></script>
+
 
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
@@ -37,13 +55,8 @@
   	// DOM element where the Timeline will be attached
   	var container = document.getElementById('visualization');
 
-//   	// Create a DataSet (allows two way data-binding)
+  	// Create a DataSet (allows two way data-binding)
    	var items = new vis.DataSet();
-//   	var items = new vis.DataSet([
-//     	{id: 1, content: 'item 1', start: '2013-04-20'},
-//     	{id: 4, content: 'item 4', start: '2013-04-16', end: '2013-04-19'},
-//   	]);
-
 	var cnt = 1;
  	var dateList = [[${dates}]]
 	var titleList = [[${titles}]]
@@ -58,8 +71,101 @@
   	// Create a Timeline
   	var timeline = new vis.Timeline(container, items, options);
   
+  	timeline.on('select', function (properties) {
+  	  alert('selected items: ' + items.get(properties.items).text);
+  	});
 /*]]>*/
 </script>
+
+	<section class="cd-horizontal-timeline">
+		<div class="timeline">
+			<div class="events-wrapper">
+				<div class="events">
+					<ol>
+						<li><a href="#0" data-date="16/01/2014" class="selected">16
+								Jan foo</a></li>
+						<li><a href="#0" data-date="28/02/2014">Jonas did one</a></li>
+						<li><a href="#0" data-date="20/04/2014">20 Mar</a></li>
+					</ol>
+
+					<span class="filling-line" aria-hidden="true"></span>
+				</div>
+				<!-- .events -->
+			</div>
+			<!-- .events-wrapper -->
+
+			<ul class="cd-timeline-navigation">
+				<li><a href="#0" class="prev inactive">Prev</a></li>
+				<li><a href="#0" class="next">Next</a></li>
+			</ul>
+			<!-- .cd-timeline-navigation -->
+		</div>
+		<!-- .timeline -->
+
+		<div class="events-content">
+			<ol>
+				<li class="selected" data-date="16/01/2014">
+					<h2>Horizontal Timeline</h2> <em>x January 16th, 2014</em>
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+						Illum praesentium officia, fugit recusandae ipsa, quia velit nulla
+						adipisci? Consequuntur aspernatur at, eaque hic repellendus sit
+						dicta consequatur quae, ut harum ipsam molestias maxime non nisi
+						reiciendis eligendi! Doloremque quia pariatur harum ea amet
+						quibusdam quisquam, quae, temporibus dolores porro doloribus.</p>
+				</li>
+
+				<li data-date="28/02/2014">
+					<h2>Event title here</h2> <em>February 28th, 2014</em>
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+						Illum praesentium officia, fugit recusandae ipsa, quia velit nulla
+						adipisci? Consequuntur aspernatur at, eaque hic repellendus sit
+						dicta consequatur quae, ut harum ipsam molestias maxime non nisi
+						reiciendis eligendi! Doloremque quia pariatur harum ea amet
+						quibusdam quisquam, quae, temporibus dolores porro doloribus.</p>
+				</li>
+
+				<li data-date="20/04/2014">
+					<h2>Event title here</h2> <em>March 20th, 2014</em>
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+						Illum praesentium officia, fugit recusandae ipsa, quia velit nulla
+						adipisci? Consequuntur aspernatur at, eaque hic repellendus sit
+						dicta consequatur quae, ut harum ipsam molestias maxime non nisi
+						reiciendis eligendi! Doloremque quia pariatur harum ea amet
+						quibusdam quisquam, quae, temporibus dolores porro doloribus.</p>
+				</li>
+			</ol>
+		</div>
+		<!-- .events-content -->
+	</section>
+
+	<div ng-app="myApp" ng-controller="home">
+		<timeline> <timeline-event ng-repeat="event in events"
+			side="right"> <timeline-badge
+			class="{{event.badgeClass}}"> <i
+			class="glyphicon {{event.badgeIconClass}}"></i> </timeline-badge> <timeline-panel
+			class="{{event.badgeClass}}"> <timeline-heading>
+		<h4>{{event.title}}</h4>
+		</timeline-heading>
+		<p>{{event.content}}</p>
+		</timeline-panel> </timeline-event> </timeline>
+	</div>
+	<script>
+		var app = angular.module('myApp', []);
+		app.controller('home', function($scope, $http) {
+			$scope.events = [{
+			    badgeClass: 'info',
+			    badgeIconClass: 'glyphicon-check',
+			    title: 'First heading',
+			    content: 'Some awesome content.'
+			  }, {
+			    badgeClass: 'warning',
+			    badgeIconClass: 'glyphicon-credit-card',
+			    title: 'Second heading',
+			    content: 'More awesome content.'
+			  }];
+			});
+	</script>
+
 
 </body>
 </html>

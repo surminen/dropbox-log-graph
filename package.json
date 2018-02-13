@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "bootstrap": "^4.0.0",
+    "jquery": "^3.3.1",
+    "reset": "^0.1.0",
+    "normalize.css": "^8.0.0"
+  },
+  "name": "demo",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/surminen/spring-bower-test.git",
+  "license": "MIT"
+}

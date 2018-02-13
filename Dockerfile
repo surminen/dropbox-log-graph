@@ -1,12 +1,14 @@
 # Set the base image
-FROM maven:alpine
+FROM centos
 
 # Dockerfile author / maintainer 
 MAINTAINER Martin Surminen <surminen@gmail.com> 
 
-# Update application repository list and install the Redis server. 
-#RUN apt-get update
-#RUN apt-get install -y redis-server
+RUN yum install -y curl sudo git maven
+RUN sudo yum install -y epel-release
+RUN curl --silent --location https://rpm.nodesource.com/setup_9.x | sudo bash -
+RUN sudo yum install -y nodejs
+RUN npm install -g yarn
 
 # Expose default port
 EXPOSE 8080
@@ -17,8 +19,11 @@ WORKDIR /devel
 # Add code
 ADD . /devel
 
-# Maven build
-#CMD ["mvn", "clean", "install"]
+# Install Yarn dependencies
+RUN yarn install --modules-folder ./src/main/resources/static
+
+#RUN ls -l node_modules
+RUN ls -l ./src/main/resources/static
 
 # Set the default command
 CMD ["mvn", "spring-boot:run"]
