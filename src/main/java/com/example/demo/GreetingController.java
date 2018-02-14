@@ -1,12 +1,14 @@
 package com.example.demo;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +23,7 @@ import com.dropbox.core.DbxStandardSessionStore;
 import com.dropbox.core.DbxWebAuth;
 import com.dropbox.core.DbxWebAuth.Request.Builder;
 import com.dropbox.core.v2.DbxClientV2;
+import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.files.ListFolderErrorException;
 import com.dropbox.core.v2.files.ListFolderResult;
 import com.dropbox.core.v2.files.Metadata;
@@ -123,11 +126,9 @@ public class GreetingController {
 
 				dates.add(date2);
 				titles.add(title);
-				
+
 				// Also get file contents here
-			}
-			else
-			{
+			} else {
 				// Get coodinates out of the gpx file
 			}
 		}
@@ -136,6 +137,31 @@ public class GreetingController {
 
 		// return the template to display;
 		return "graphView";
+	}
 
+	private String readFile(DbxClientV2 client, String filepath) {
+
+		ByteArrayOutputStream downloadFile = new ByteArrayOutputStream();
+
+		try {
+			// output file for download --> storage location on local system to download
+			// file
+			// OutputStream downloadFile = new FileOutputStream("/tmp/foo.bar.txt");
+			try {
+				FileMetadata metadata = client.files().downloadBuilder(filepath).download(downloadFile);
+			} finally {
+				downloadFile.close();
+			}
+		}
+		// exception handled
+		catch (DbxException e) {
+			// error downloading file
+			return "Unable to download file to local system";
+		} catch (IOException e) {
+			// error downloading file
+			return "Unable to download file to local system";
+		}
+
+		return downloadFile.toString(Charset.defaultCharset());
 	}
 }

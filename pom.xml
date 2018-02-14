@@ -53,6 +53,12 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.6</version>
+		</dependency>
+
 		<!-- WebJars -->
 		<!-- <dependency> -->
 		<!-- <groupId>org.webjars</groupId> -->
