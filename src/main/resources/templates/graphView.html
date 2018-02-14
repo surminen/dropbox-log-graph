@@ -25,7 +25,12 @@
 	src="https://192.168.99.100:8080/css/angular-timeline-bootstrap.css"></script>
 
 
-
+<!-- NoUiSlider -->
+<link
+	href="https://192.168.99.100:8080/nouislider/distribute/nouislider.min.css"
+	rel="stylesheet" />
+<script
+	src="https://192.168.99.100:8080/nouislider/distribute/nouislider.min.js"></script>
 
 <script src="https://192.168.99.100:8080/jquery/dist/jquery.js"></script>
 <script src="https://192.168.99.100:8080/js/main.js"></script>
@@ -48,6 +53,60 @@
 	</table>
 
 	<div id="visualization"></div>
+
+	<button onclick="fitTimeline()">fit</button>
+
+	<div id="slider" style="width:50%; margin:0 auto;"></div>
+	<script>
+	var slider = document.getElementById('slider');
+
+	noUiSlider.create(slider, {
+		start: [2000, 2019],
+		connect: true,
+		margin: 2, // Handles must be at least x apart
+		tooltips: true,
+		step: 1,
+		range: {
+			'min': 2000,
+			'max': 2019
+		},
+		pips: { // Show a scale with the slider
+			mode: 'steps',
+			stepped: true,
+			density: 4
+		}
+	});
+	</script>
+
+<!--  
+ <script>
+	var slider = document.getElementById('slider');
+
+ noUiSlider.create(slider, {
+		start: [ 1450, 2050, 2350, 3000 ], // 4 handles, starting at...
+		margin: 300, // Handles must be at least 300 apart
+		limit: 600, // ... but no more than 600
+		connect: true, // Display a colored bar between the handles
+		direction: 'rtl', // Put '0' at the bottom of the slider
+		orientation: 'vertical', // Orient the slider vertically
+		behaviour: 'tap-drag', // Move handle on tap, bar is draggable
+		step: 150,
+		tooltips: true,
+		format: wNumb({
+			decimals: 0
+		}),
+		range: {
+			'min': 1300,
+			'max': 3250
+		},
+		pips: { // Show a scale with the slider
+			mode: 'steps',
+			stepped: true,
+			density: 4
+		}
+	});
+ </script>
+  -->
 
 	<script th:inline="javascript">
 /*<![CDATA[*/
@@ -74,8 +133,14 @@
   	timeline.on('select', function (properties) {
   	  alert('selected items: ' + items.get(properties.items).text);
   	});
+  	
+  	function fitTimeline() {
+  	    timeline.fit(true);
+  	}
 /*]]>*/
 </script>
+
+
 
 	<section class="cd-horizontal-timeline">
 		<div class="timeline">
@@ -137,35 +202,6 @@
 		</div>
 		<!-- .events-content -->
 	</section>
-
-	<div ng-app="myApp" ng-controller="home">
-		<timeline> <timeline-event ng-repeat="event in events"
-			side="right"> <timeline-badge
-			class="{{event.badgeClass}}"> <i
-			class="glyphicon {{event.badgeIconClass}}"></i> </timeline-badge> <timeline-panel
-			class="{{event.badgeClass}}"> <timeline-heading>
-		<h4>{{event.title}}</h4>
-		</timeline-heading>
-		<p>{{event.content}}</p>
-		</timeline-panel> </timeline-event> </timeline>
-	</div>
-	<script>
-		var app = angular.module('myApp', []);
-		app.controller('home', function($scope, $http) {
-			$scope.events = [{
-			    badgeClass: 'info',
-			    badgeIconClass: 'glyphicon-check',
-			    title: 'First heading',
-			    content: 'Some awesome content.'
-			  }, {
-			    badgeClass: 'warning',
-			    badgeIconClass: 'glyphicon-credit-card',
-			    title: 'Second heading',
-			    content: 'More awesome content.'
-			  }];
-			});
-	</script>
-
 
 </body>
 </html>
