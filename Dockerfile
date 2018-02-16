@@ -16,14 +16,5 @@ EXPOSE 8080
 # Set the working directory
 WORKDIR /devel
 
-# Add code
-ADD . /devel
-
-# Install Yarn dependencies
-RUN yarn install --modules-folder ./src/main/resources/static
-
-#RUN ls -l node_modules
-RUN ls -l ./src/main/resources/static
-
 # Set the default command
-CMD ["mvn", "spring-boot:run"]
+CMD /bin/bash -c "yarn install --modules-folder ./src/main/resources/static; mvn spring-boot:run"

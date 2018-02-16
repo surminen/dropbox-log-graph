@@ -52,11 +52,17 @@
 		</tr>
 	</table>
 
-	<div id="visualization"></div>
-
+	<div id="visualization"><p id="testid">testid</p></div>
 	<button onclick="fitTimeline()">fit</button>
+	<button onclick="show()">show</button>1
+	<p id="selectedContent">foo</p>
 
-	<div id="slider" style="width:50%; margin:0 auto;"></div>
+
+<script>
+document.getElementById("p1").innerHTML = "New text!";
+</script>
+
+	<div id="slider" style="width: 50%; margin: 0 auto;"></div>
 	<script>
 	var slider = document.getElementById('slider');
 
@@ -77,36 +83,6 @@
 		}
 	});
 	</script>
-
-<!--  
- <script>
-	var slider = document.getElementById('slider');
-
- noUiSlider.create(slider, {
-		start: [ 1450, 2050, 2350, 3000 ], // 4 handles, starting at...
-		margin: 300, // Handles must be at least 300 apart
-		limit: 600, // ... but no more than 600
-		connect: true, // Display a colored bar between the handles
-		direction: 'rtl', // Put '0' at the bottom of the slider
-		orientation: 'vertical', // Orient the slider vertically
-		behaviour: 'tap-drag', // Move handle on tap, bar is draggable
-		step: 150,
-		tooltips: true,
-		format: wNumb({
-			decimals: 0
-		}),
-		range: {
-			'min': 1300,
-			'max': 3250
-		},
-		pips: { // Show a scale with the slider
-			mode: 'steps',
-			stepped: true,
-			density: 4
-		}
-	});
- </script>
-  -->
 
 	<script th:inline="javascript">
 /*<![CDATA[*/
@@ -131,12 +107,19 @@
   	var timeline = new vis.Timeline(container, items, options);
   
   	timeline.on('select', function (properties) {
-  	  alert('selected items: ' + items.get(properties.items).text);
+  	  	// alert('selected items: ' + properties.items);
+  	    // document.getElementById('selectedContent').innerHTML = "xxx";
+  	  	document.getElementById('selectedContent').innerHTML = titleList[properties.items -1];
   	});
   	
   	function fitTimeline() {
   	    timeline.fit(true);
   	}
+
+  	function show() {
+  		document.getElementById('selectedContent').innerHTML = "yyy";
+  	}
+
 /*]]>*/
 </script>
 
@@ -148,8 +131,8 @@
 				<div class="events">
 					<ol>
 						<li><a href="#0" data-date="16/01/2014" class="selected">16
-								Jan foo</a></li>
-						<li><a href="#0" data-date="28/02/2014">Jonas did one</a></li>
+								Jan</a></li>
+						<li><a href="#0" data-date="28/02/2014">28 Feb</a></li>
 						<li><a href="#0" data-date="20/04/2014">20 Mar</a></li>
 					</ol>
 
